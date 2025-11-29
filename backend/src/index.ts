@@ -8,8 +8,13 @@ import formRoutes from './routes/forms';
 import submissionRoutes from './routes/submissions';
 import uploadRoutes from './routes/upload';
 
-// Load .env from root directory (parent of backend/)
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// Load .env from root directory (parent of backend/) - only in development
+// In production (Render), environment variables are set directly
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+} else {
+  dotenv.config(); // Load from current directory in production
+}
 
 // Verify critical environment variables after loading
 if (process.env.GEMINI_API_KEY) {
@@ -28,7 +33,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+// CORS: Allow frontend URL in production, all origins in development
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL || '*' // Set FRONTEND_URL in Render
+    : '*',
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
