@@ -36,9 +36,11 @@ const PORT = process.env.PORT || 5000;
 // CORS: Allow frontend URL in production, all origins in development
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL || '*' // Set FRONTEND_URL in Render
+    ? process.env.FRONTEND_URL || 'https://centralignwebapp-frontend.onrender.com' // Allow frontend URL
     : '*',
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 app.use(cors(corsOptions));
 app.use(express.json());
