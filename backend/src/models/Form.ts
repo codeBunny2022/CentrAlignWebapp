@@ -19,11 +19,11 @@ export interface IFormField {
   defaultValue?: string | number | boolean;
 }
 
-export interface IForm extends Document {
+export interface IForm extends Omit<Document, 'schema'> {
   userId: mongoose.Types.ObjectId;
   title: string;
   description?: string;
-  schema: IFormField[];
+  schema: IFormField[]; // Form field definitions (not Mongoose schema)
   shareableId: string; // Unique ID for public sharing
   embedding?: number[]; // Vector embedding for semantic search
   summary?: string; // Text summary for retrieval
@@ -105,5 +105,5 @@ FormSchema.pre('save', function (next) {
 FormSchema.index({ userId: 1, createdAt: -1 });
 // shareableId index is automatically created by unique: true above
 
-export default mongoose.model<IForm>('Form', FormSchema);
+export default mongoose.model<IForm>('Form', FormSchema) as mongoose.Model<IForm>;
 
