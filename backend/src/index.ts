@@ -63,7 +63,7 @@ app.use('/api/submissions', submissionRoutes);
 app.use('/api/upload', uploadRoutes);
 
 // Health check
-app.get('/api/health', (req, res) => {
+app.get('/api/health', (req: express.Request, res: express.Response) => {
   res.json({ status: 'ok', message: 'CentrAlign API is running' });
 });
 
